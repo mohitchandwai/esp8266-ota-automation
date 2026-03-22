@@ -10,7 +10,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'your-branch-name', url: 'https://github.com/your-username/your-repo.git'
+                git branch: 'rajit', url: 'https://github.com/mohitchandwai/esp8266-ota-automation.git'
             }
         }
 
@@ -22,7 +22,10 @@ pipeline {
 
         stage('Build Firmware') {
             steps {
-                sh 'pio run'
+                sh '''
+                cd esp8266-ota-automation
+                pio run
+                '''
             }
         }
 
@@ -34,6 +37,7 @@ pipeline {
                 ]]) {
 
                     sh '''
+                    cd esp8266-ota-automation
                     aws s3 cp .pio/build/*/firmware.bin \
                     s3://$AWS_BUCKET/firmware-${BUILD_NUMBER}.bin \
                     --region $AWS_REGION
@@ -48,7 +52,7 @@ pipeline {
             echo "Build & Upload Successful "
         }
         failure {
-            echo "Build Failed"
+            echo "Build Failed "
         }
     }
 }
