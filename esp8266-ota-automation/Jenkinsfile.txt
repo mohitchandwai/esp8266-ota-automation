@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_BUCKET = "my-firmware-bucket"
+        AWS_REGION = "ap-south-1"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'your-branch-name', url: 'https://github.com/your-username/your-repo.git'
+            }
+        }
+
+        stage('Install PlatformIO') {
+            steps {
+                sh 'pip3 install platformio'
+            }
+        }
+
+        stage('Build Firmware') {
+            steps {
+                sh 'pio run'
+            }
+        }
+
+        stage('Upload to S3') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+
+                    sh '''
+                    aws s3 cp .pio/build/*/firmware.bin \
+                    s3://$AWS_BUCKET/firmware-${BUILD_NUMBER}.bin \
+                    --region $AWS_REGION
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Build & Upload Successful "
+        }
+        failure {
+            echo "Build Failed"
+        }
+    }
+}
