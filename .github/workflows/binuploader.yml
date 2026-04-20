@@ -1,0 +1,38 @@
+name: Build and Deploy ESP8266 Firmware
+
+on:
+  push:
+    branches:
+      - main  # Jab bhi main branch pe push hoga, ye chalega
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Setup Arduino CLI
+      uses: arduino/setup-arduino-cli@v1
+
+    - name: Install ESP8266 Platform
+      run: |
+        arduino-cli core update-index
+        arduino-cli core install esp8266:esp8266
+
+    - name: Compile Sketch
+      run: |
+        # Yahan apni .ino file ka folder name check kar lena
+        arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./build ./
+
+    - name: Upload to S3
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --follow-symlinks --delete
+      env:
+        AWS_S3_BUCKET: iotcicdframework
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'us-east-1'   # Aapka region
+        SOURCE_DIR: './build'    # Jahaan binary generate hui hai
