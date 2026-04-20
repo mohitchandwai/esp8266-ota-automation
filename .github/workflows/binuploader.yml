@@ -29,8 +29,11 @@ jobs:
         arduino-cli core install esp8266:esp8266
     - name: Compile Sketch
       run: |
+        mkdir -p build
         # Yahan apni .ino file ka folder name check kar lena
         arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./build ./
+    - name: Rename Binary
+      run: mv ./build/*.bin ./build/update.bin
 
     - name: Upload to S3
       uses: jakejarvis/s3-sync-action@master
