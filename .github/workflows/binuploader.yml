@@ -30,8 +30,8 @@ jobs:
     - name: Compile Sketch
       run: |
         mkdir -p build
-        # Yahan apni .ino file ka folder name check kar lena
-        arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./build ./
+        # Yahan path wahi dena jo folder aapne banaya hai
+        arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./build ./ota_sketch
     - name: Rename Binary
       run: mv ./build/*.bin ./build/update.bin
 
