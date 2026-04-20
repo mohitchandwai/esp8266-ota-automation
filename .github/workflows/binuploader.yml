@@ -33,7 +33,7 @@ jobs:
         # Yahan path wahi dena jo folder aapne banaya hai
         arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./build ./ota_sketch
     - name: Rename Binary
-      run: mv ./build/*.bin ./build/update.bin
+      run: mv ./build/*.bin ./build/firmware.bin
 
     - name: Upload to S3
       uses: jakejarvis/s3-sync-action@master
