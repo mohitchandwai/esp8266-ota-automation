@@ -169,7 +169,7 @@ void loop() {
     client.loop();
     
     static unsigned long lastBlink = 0;
-    if (millis() - lastBlink > 100) {
+    if (millis() - lastBlink > 105) {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
         lastBlink = millis();
     }
