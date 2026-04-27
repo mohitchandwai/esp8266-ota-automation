@@ -27,6 +27,10 @@ jobs:
         
        
         arduino-cli core install esp8266:esp8266
+    - name: Install Libraries
+      run: |
+        arduino-cli lib update-index
+        arduino-cli lib install "PubSubClient"
     - name: Compile Sketch
       run: |
         mkdir -p build
