@@ -108,25 +108,9 @@ void syncTime() {
     Serial.print("Current time: ");
     Serial.print(asctime(&timeinfo));
 }
-const char* status_topic = "esp8266/status"; 
-const char* current_version = "2.0"; // Har update ke saath ise manually badalna hoga
+ // Har update ke saath ise manually badalna hoga
 
-void sendStatus() {
-    // JSON Payload taiyar karna
-    String payload = "{";
-    payload += "\"deviceId\":\"ESP8266_Controller\",";
-    payload += "\"status\":\"online\",";
-    payload += "\"version\":\"" + String(current_version) + "\",";
-    payload += "\"rssi\":" + String(WiFi.RSSI()); // WiFi signal strength
-    payload += "}";
 
-    // Status topic par publish karna
-    if (client.publish(status_topic, payload.c_str())) {
-        Serial.println("Status Heartbeat Sent!");
-    } else {
-        Serial.println("Status Heartbeat Failed!");
-    }
-}
 
 void startOTA() {
     Serial.println("Starting OTA Update from S3...");
@@ -181,8 +165,7 @@ void setup() {
     connectToAWS();
 }
 
-unsigned long lastStatusTime = 0;
-const long statusInterval = 30000;
+
 
 void loop() {
     if (!client.connected()) {
@@ -195,9 +178,5 @@ void loop() {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
         lastBlink = millis();
     }
-    unsigned long currentMillis = millis();
-    if (currentMillis - lastStatusTime >= statusInterval) {
-        lastStatusTime = currentMillis;
-        sendStatus(); 
-    }
+    
 }
