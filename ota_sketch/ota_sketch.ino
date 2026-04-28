@@ -5,8 +5,8 @@
 #include <time.h> // Time sync ke liye zaroori hai
 
 // --- WiFi Credentials ---
-const char* ssid = "realme C65 5G";
-const char* password = "chandwani8";
+const char* ssid = "Galaxy S24 6E6A";
+const char* password = "Abvd@123";
 
 // --- AWS IoT Core Settings ---
 const char* aws_endpoint = "a1aruuug3gi6gh-ats.iot.us-east-1.amazonaws.com"; 
@@ -174,7 +174,7 @@ void loop() {
     client.loop();
     
     static unsigned long lastBlink = 0;
-    if (millis() - lastBlink > 1000) {
+    if (millis() - lastBlink > 100) {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
         lastBlink = millis();
     }
