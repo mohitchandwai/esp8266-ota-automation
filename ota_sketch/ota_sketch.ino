@@ -145,7 +145,7 @@ void connectToAWS() {
             Serial.print("FAILED, rc=");
             Serial.print(client.state());
             Serial.println(" - Retrying in 5s...");
-            delay(5000);
+            delay(50);
         }
     }
 }
@@ -174,7 +174,7 @@ void loop() {
     client.loop();
     
     static unsigned long lastBlink = 0;
-    if (millis() - lastBlink > 100) {
+    if (millis() - lastBlink > 1000) {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
         lastBlink = millis();
     }
